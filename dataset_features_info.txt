@@ -1,0 +1,123 @@
+Flight On-Time Dataset - Feature Descriptions
+
+Carrier_Name	                     Name of Airline/Carrier
+
+Year	                             Year
+
+Quarter	                             Quarter (1-4)
+
+Month 	                             Month (Jan, Feb, Mar, etc.)
+
+Month_Day	                         Day of the month
+
+Week_Day	                         Day of the week
+
+Flight_Date	                         Flight Date (yyyymmdd)
+
+Airline_DOT_ID	                     An identification number assigned by US DOT to 
+                                     identify a unique airline (carrier). A unique 
+                                     airline (carrier) is defined as one holding and 
+                                     reporting under the same DOT certificate 
+                                     regardless of its Code, Name, or holding 
+                                     company/corporation.
+                                     
+Tail_Number	                         Tail Number
+
+Flight_Number	                     Flight Number
+
+Origin_Airport_ID	                 Origin Airport, Airport ID. An identification 
+                                     number assigned by US DOT to identify a unique 
+                                     airport. Use this field for airport analysis 
+                                     across a range of years because an airport can 
+                                     change its airport code and airport codes can 
+                                     be reused.
+                                     
+Origin_City_Market_ID	             Origin Airport, City Market ID. City Market ID is 
+                                     an identification number assigned by US DOT to 
+                                     identify a city market. Use this field to 
+                                     consolidate airports serving the same city market.
+                                     
+Origin_IATA_Code	                 Origin IATA Code. An International Air Transport 
+                                     Association (IATA) code is three-letter geocode 
+                                     used to designate airports and metropolitan areas
+                                     
+Origin_City_State	                 City, State
+
+Destination_Airport_ID	             Destination Airport, Airport ID. An identification 
+                                     number assigned by US DOT to identify a unique 
+                                     airport. Use this field for airport analysis across 
+                                     a range of years because an airport can change its 
+                                     airport code and airport codes can be reused.
+                                     
+Destination_City_Market_ID	         Destination Airport, City Market ID. City Market ID 
+                                     is an identification number assigned by US DOT to 
+                                     identify a city market. Use this field to consolidate 
+                                     airports serving the same city market.
+                                     
+Destination_IATA_Code	             Destination IATA Code. An International Air Transport
+                                     Association (IATA) code is three-letter geocode used 
+                                     to designate airports and metropolitan areas
+                                     
+Destination_City_State	             City, State
+
+Dep_Time_Block_Group	             Departure Time Block Group: This variable bins 
+                                     departure flight times into one of six colloquial 
+                                     segments—Early Morning, Morning, Early Afternoon, 
+                                     Afternoon, Evening, and Night.
+                                     
+Scheduled_Departure_Time	         Scheduled Departure Time (local time: hhmm)
+
+Actual_Dep_Time	Actual               Actual Departure Time (local time: hhmm)
+
+Dep_Time_Offset	                     Difference in minutes between scheduled and actual 
+                                     departure time. Early departures show negative numbers.
+                                     
+Dep_Delay_Minutes	                 Difference in minutes between scheduled and actual 
+                                     departure time. Early departures set to 0.
+                                     
+Dep_Delay_At_Least_15_Minutes	     Departure Delay Indicator, 15 Minutes or More (1=Yes)
+
+Scheduled_Arrival_Time	             Scheduled Arrival Time (local time: hhmm)
+
+Arr_Time_Block_Group	             Arrival Time Block Group: This variable bins arrival 
+                                     flight times into one of six colloquial segments—
+                                     Early Morning, Morning, Early Afternoon, Afternoon, 
+                                     Evening, and Night.
+                                     
+Actual_Arr_Time	                     Actual Arrival Time (local time: hhmm)
+
+Arr_Time_Offset	                     Difference in minutes between scheduled and actual 
+                                     arrival time. Early arrivals show negative numbers.
+                                     
+Arr_Delay_Minutes	                 Difference in minutes between scheduled and actual 
+                                     arrival time. Early arrivals set to 0.
+                                     
+Arr_Delay_At_Least_15_Minutes	     Arrival Delay Indicator, 15 Minutes or More (1=Yes)
+
+Flight_Cancelled	                 Cancelled Flight Indicator (1=Yes)
+
+Flight_Diverted	                     Diverted Flight Indicator (1=Yes)
+
+Scheduled_Gate_to_Gate_Time	         Scheduled time from origin gate to destination gate.
+
+Actual_Gate_to_Gate_Time	         Actual time from origin gate to destination gate.
+
+Time_Airborne	                     Elapsed Time of Flight, in Minutes
+
+Number_of_Flights	                 Number of Flights
+
+Distance_Miles	                     Distance between airports in miles.
+
+Distance_Group	                     Distance intervals in 250-mile increments.
+
+Carrier_Delay	                     Delay due to the carrier in minutes.
+
+Weather_Delay	                     Delay due to weather in minutes.
+
+National_Aviation_System_Delay	     Delay due to National Air System in minutes.
+
+Security_Delay	                     Delay due to security in minutes.
+
+Late_Aircraft_Delay	                 Delay due to late aircraft in minutes.
+
+
