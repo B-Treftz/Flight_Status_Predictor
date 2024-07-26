@@ -1,14 +1,25 @@
-function updateScheduledTimes() {
-	var flightDepTimes = {};
-		
-	const carrier = document.getElementById('carrier'); 
-	const depTimeBlock = document.getElementById('depTimeBlock'); 
-	const scheduledDepartures = document.getElementById('scheduledDepTime');
-	const selectedCarrier = carrier.value; 
-	const selectedTimeBlock = depTimeBlock.value; 
-	
-	if (selectedCarrier == 'United') {		
-		flightDepTimes = {
+import streamlit as st 
+from utils import PrepProcesor, columns 
+import numpy as np 
+import pandas as pd
+from datetime import datetime
+import joblib 
+
+model_path = r'..\models\flight_model.pkl'
+
+model = joblib.load(model_path)
+
+def format_time(time_str):
+    # Convert to datetime object for easier sorting
+    time_obj = datetime.strptime(time_str.zfill(4), "%H%M")            
+    # Format as "hh:mm"
+    return time_obj.strftime("%H:%M")
+
+def updateScheduledTimes(selectedTimeOfDay): 
+    flightDepTimes = {}
+
+    if (selectCarrier == 'United Air Lines Inc.'): 
+        flightDepTimes = {
 			'Early Morning': ['629', '730', '752', '500', '530', '710', '720', '105', '625', '630', '645', '700', '741', '515', '736', '733', '715', '734',
 							'620', '619', '706', '740', '545', '602', '600', '537', '745', '744', '738', '728', '747', '721', '607', '640', '631', '713',
 							'701', '510', '610', '704', '615', '652', '725', '605', '55', '750', '755', '553', '519', '739', '650', '643', '754', '525',
@@ -83,10 +94,9 @@ function updateScheduledTimes() {
 					'2107', '2233', '2317', '2228', '2238', '2333', '2324', '2136', '2342', '2344', '2242', '2303', '2343', '2249', '2244', '2143',
 					'2213', '2319', '2341', '2311', '2226', '2321', '2246', '2141', '2214', '2234', '2328', '2147', '2334', '2327', '2216', '2231',
 					'2227', '2232', '2329']
-		};
-	}
-	else if (selectedCarrier == 'Delta') {	
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'Delta Air Lines Inc.'): 
+        flightDepTimes = {
 			'Early Morning': ['655', '700', '705', '530', '600', '640', '553', '510', '740', '632', '555', '715', '615', '730', '745', '605', '45', '723',
 							  '725', '544', '40', '722', '630', '525', '535', '609', '37', '710', '540', '25', '645', '750', '35', '30', '735', '520', '724', '610',
 							  '706', '659', '545', '519', '720', '713', '703', '650', '539', '702', '533', '635', '602', '625', '522', '620', '704', '716',
@@ -161,10 +171,9 @@ function updateScheduledTimes() {
 					  '2214', '2356', '2354', '2328', '2138', '2227', '2308', '2343', '2131', '2139', '2336', '2346', '2339', '2322', '2309', '2152',
 					  '2319', '2313', '2213', '2221', '2204', '2324', '2333', '2232', '2222', '2352', '2321', '2334', '2349', '2148', '2212', '2132',
 					  '2353', '2224']
-		};
-	}
-	else if (selectedCarrier == 'American') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'American Airlines Inc.'):
+        flightDepTimes = {
 			'Early Morning': ['550', '540', '710', '534', '600', '614', '745', '630', '601', '544', '623', '700', '703', '721', '753', '704', '616', '610',
 							  '741', '705', '755', '744', '619', '729', '622', '635', '631', '643', '725', '520', '615', '730', '740', '715', '645', '734',
 							  '709', '516', '750', '640', '53', '659', '636', '708', '732', '657', '656', '634', '109', '733', '742', '26', '535', '737',
@@ -239,10 +248,9 @@ function updateScheduledTimes() {
 					  '2239', '2207', '2310', '2353', '2301', '2206', '2302', '2226', '2337', '2153', '2358', '2147', '2210', '2343', '2256', '2350',
 					  '2323', '2344', '2134', '2305', '2306', '2326', '2136', '2327', '2322', '2334', '2139', '2351', '2352', '2213', '2349', '2333',
 					  '2335', '2314', '2311', '2329', '2332', '2341', '2201', '2316', '2312', '2209', '2331', '2319', '2211', '2328', '2342', '2321']
-		};
-	} 
-	else if (selectedCarrier == 'Southwest') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'Southwest Airlines Co.'):
+        flightDepTimes = {
 			'Early Morning': ['500', '540', '745', '750', '530', '550', '615', '630', '605', '600', '650', '635', '645', '610', '730', '700', '555', '640',
 							  '525', '545', '705', '625', '720', '620', '725', '515', '715', '755', '510', '710', '655', '535', '735', '505', '520', '740'],
 			'Morning': ['945', '1010', '1105', '1130', '1045', '950', '830', '1150', '930', '1030', '955', '815', '905', '1120', '850', '1050', '820', '935',
@@ -260,10 +268,9 @@ function updateScheduledTimes() {
 			'Night': ['2215', '2155', '2230', '2115', '2205', '2200', '2235', '2135', '2125', '2255', '2145', '2225', '2150', '2210', '2245', '2120',
 					  '2105', '2140', '2130', '2220', '2100', '2250', '2110', '2240',
 					  '2320']
-		};
-	}
-	else if (selectedCarrier == 'Allegiant') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'Allegiant Air'):
+        flightDepTimes = {
 			'Early Morning': ['630', '700', '725', '730', '750', '650', '745', '620', '610', '752', '600', '635', '645', '657', '631', '701', '720', '735',
 							  '715', '705', '625', '640', '710', '607', '615', '724', '740', '605', '602', '754', '707', '727', '731', '742', '606', '744',
 							  '755', '655', '653', '741', '738', '651', '736', '626', '751', '709', '733', '623', '608', '711', '726', '723', '708', '732',
@@ -327,10 +334,9 @@ function updateScheduledTimes() {
 					  '2151', '2308', '2230', '2304', '2132', '2231', '2250', '2139', '2237', '2226', '2232', '2100', '2300', '2211', '2210', '2225',
 					  '2155', '2234', '2302', '2303', '2256', '2212', '2227', '2245', '2252', '2320', '2254', '2239', '2259', '2318', '2222', '2319',
 					  '2309', '2255', '2253', '2313', '2242', '2312', '2310', '2317']
-		};
-	} 
-	else if (selectedCarrier == 'JetBlue') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'JetBlue Airways'):
+        flightDepTimes = {
 			'Early Morning': ['600', '639', '750', '650', '449', '745', '610', '59', '433', '601', '545', '730', '707', '55', '735', '710', '635', '608',
 							  '605', '700', '744', '505', '759', '144', '630', '640', '629', '425', '715', '510', '714', '616', '720', '746', '501', '740',
 							  '728', '130', '705', '631', '725', '756', '724', '615', '604', '739', '527', '646', '627', '150', '539', '324', '645', '231',
@@ -404,10 +410,9 @@ function updateScheduledTimes() {
 					  '2238', '2141', '2233', '2113', '2202', '2138', '2250', '2149', '2126', '2301', '2146', '2142', '2242', '2338', '2118', '2123',
 					  '2323', '2101', '2121', '2214', '2305', '2344', '2213', '2133', '2326', '2352', '2108', '2153', '2252', '2224', '2243', '2211',
 					  '2336', '2104', '2143', '2248', '2306', '2147', '2332', '2117', '2201', '2157', '2328']
-		};
-	}
-	else if (selectedCarrier == 'PSA') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'PSA Airlines Inc.'):
+        flightDepTimes = {
 			'Early Morning': ['630', '542', '725', '730', '603', '602', '600', '530', '628', '525', '741', '743', '700', '545', '646', '645', '511', '715',
 							  '555', '549', '720', '605', '705', '558', '740', '533', '652', '640', '613', '556', '500', '716', '710', '635', '618', '726',
 							  '601', '620', '717', '631', '749', '712', '510', '724', '532', '606', '609', '634', '505', '748', '2', '610', '607', '759', '509',
@@ -476,10 +481,9 @@ function updateScheduledTimes() {
 					  '2102', '2105', '2257', '2104', '2116', '2124', '2250', '2159', '2252', '2218', '2138', '2145', '2107', '2129', '2224', '2219',
 					  '2149', '2141', '2123', '2234', '2247', '2106', '2144', '2256', '2154', '2216', '2245', '2122', '2133', '2303', '2132', '2114',
 					  '2156', '2142', '2139', '2113', '2300', '2237', '2158', '2127', '2126', '2359', '2136']
-		};
-	}
-	else if (selectedCarrier == 'Endeavor') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'Endeavor Air Inc.'):
+        flightDepTimes = {
 			'Early Morning': ['545', '615', '710', '520', '543', '653', '600', '621', '614', '715', '700', '555', '640', '531', '647', '759', '740', '745',
 							   '619', '720', '635', '550', '525', '650', '528', '655', '730', '630', '749', '751', '605', '546', '622', '716', '524', '729',
 							   '515', '610', '620', '705', '725', '601', '747', '544', '618', '625', '750', '632', '530', '633', '628', '744', '704', '547',
@@ -544,10 +548,9 @@ function updateScheduledTimes() {
 					  '2240', '2158', '2103', '2259', '2235', '2154', '2335', '2225', '2233', '2229', '2119', '2245', '2300', '2157', '2101', '2220',
 					  '2135', '2138', '2132', '2146', '2232', '2210', '2224', '2127', '2251', '2254', '2243', '2151', '2149', '2257', '2147', '2143',
 					  '2201', '2121', '2203', '2214', '2107', '2141', '2241', '2237', '2227', '2310', '2131', '2153', '2239', '2142', '2236', '2216']
-		};
-	}
-	else if (selectedCarrier == 'Alaska') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'Alaska Airlines Inc.'):
+        flightDepTimes = {
 			'Early Morning': ['705', '600', '700', '749', '715', '155', '500', '255', '750', '625', '735', '709', '40', '714', '725', '730', '740', '355',
 							  '225', '530', '645', '723', '707', '717', '135', '611', '720', '545', '106', '555', '250', '615', '630', '755', '635', '728',
 							  '745', '59', '655', '105', '753', '747', '520', '540', '711', '650', '534', '743', '240', '640', '726', '350', '710', '729',
@@ -613,10 +616,9 @@ function updateScheduledTimes() {
 					  '2348', '2137', '2204', '2151', '2239', '2306', '2354', '2238', '2117', '2202', '2122', '2332', '2313', '2331', '2102', '2236',
 					  '2349', '2353', '2346', '2143', '2119', '2201', '2158', '2108', '2118', '2219', '2104', '2227', '2131', '2123', '2309', '2109',
 					  '2229']
-		};
-	}
-	else if (selectedCarrier == 'Frontier') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'Frontier Airlines Inc.'):
+        flightDepTimes = {
 			'Early Morning': ['728', '545', '750', '555', '610', '116', '600', '645', '13', '730', '626', '1', '625', '608', '635', '700', '735', '251', '605',
 							  '540', '530', '615', '41', '603', '720', '541', '525', '710', '25', '705', '624', '59', '550', '755', '748', '29', '740', '742', '620',
 							  '501', '715', '745', '722', '655', '743', '505', '630', '650', '759', '147', '752', '739', '510', '535', '359', '643', '47',
@@ -696,10 +698,9 @@ function updateScheduledTimes() {
 					  '2203', '2324', '2314', '2230', '2142', '2133', '2256', '2340', '2137', '2102', '2319', '2117', '2336', '2355', '2128', '2358',
 					  '2206', '2326', '2219', '2329', '2350', '2302', '2241', '2313', '2341', '2332', '2113', '2351', '2352', '2116', '2339', '2338',
 					  '2357', '2347', '2356', '2345']
-		};
-	}
-	else if (selectedCarrier == 'Envoy') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'Envoy Air'):
+        flightDepTimes = {
 			'Early Morning': ['720', '600', '610', '538', '544', '700', '638', '630', '715', '620', '708', '520', '635', '618', '751', '730', '719', '728',
 							  '547', '645', '706', '550', '747', '530', '717', '601', '701', '615', '703', '500', '653', '626', '740', '505', '637', '735',
 							  '732', '627', '641', '704', '625', '713', '548', '642', '545', '608', '714', '705', '749', '745', '540', '542', '709', '536',
@@ -768,10 +769,9 @@ function updateScheduledTimes() {
 					  '2219', '2106', '2128', '2159', '2123', '2108', '2150', '2247', '2210', '2132', '2223', '2122', '2118', '2137', '2146', '2138',
 					  '2144', '2211', '2310', '2206', '2155', '2258', '2145', '2249', '2142', '2126', '2133', '2143', '2227', '2251', '2134', '2136',
 					  '2228', '2141', '2208', '2148', '2254', '2207', '2220', '2203', '2359', '2216', '2215']
-		};
-	}
-	else if (selectedCarrier == 'Hawaiian') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'Hawaiian Airlines Inc.'):
+        flightDepTimes = {
 			'Early Morning': ['115', '744', '650', '720', '715', '730', '745', '755', '705', '740', '750', '615', '700', '605', '725', '710', '600', '645',
 							  '610', '545', '735', '120', '646', '536', '630', '655', '540', '537', '620', '734', '155', '625', '125', '758', '714', '515',
 							  '640', '635', '722', '759', '550', '145', '500', '729', '731', '629', '711', '724', '757', '626', '55', '100', '616'],
@@ -800,10 +800,9 @@ function updateScheduledTimes() {
 						'2059', '2031', '1809', '2028', '1937', '2035', '1923', '1838', '1938', '1936', '1951', '2047', '1844', '2024', '1950'],
 			'Night': ['2320', '2115', '2120', '2200', '2230', '2220', '2125', '2340', '2130', '2110', '2135', '2229', '2325', '2105', '2145', '2225',
 					  '2217', '2100', '2330', '2315', '2335', '2235', '2245', '2209', '2101', '2310', '2150', '2155', '2210', '2240']
-		};
-	}
-	else if (selectedCarrier == 'SkyWest') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'SkyWest Airlines Inc.'):
+        flightDepTimes = {
 			'Early Morning': ['600', '744', '746', '730', '749', '750', '515', '700', '714', '735', '500', '658', '655', '534', '656', '620', '648', '615',
 							  '705', '740', '721', '747', '625', '720', '707', '733', '630', '610', '649', '604', '745', '624', '545', '605', '517', '737',
 							  '609', '715', '505', '734', '704', '550', '723', '535', '743', '710', '701', '530', '645', '652', '504', '712', '725', '717',
@@ -873,10 +872,9 @@ function updateScheduledTimes() {
 					  '2134', '2237', '2220', '2256', '2330', '2303', '2259', '2101', '2205', '2203', '2137', '2253', '2200', '2230', '2257', '2114',
 					  '2141', '2239', '2108', '2315', '2109', '2301', '2351', '2308', '2234', '2356', '2202', '2231', '2214', '2222', '2228', '2229',
 					  '2314', '2213', '2209', '2350', '2355', '2358', '2359']
-		};
-	}
-	else if (selectedCarrier == 'Republic') {
-		flightDepTimes = {
+		}
+    elif (selectCarrier == 'Republic Airline'):
+        flightDepTimes = {
 			'Early Morning': ['600', '606', '520', '745', '721', '649', '700', '701', '630', '730', '751', '735', '716', '628', '541', '720', '703', '538',
 							  '602', '715', '647', '615', '631', '704', '635', '619', '620', '705', '605', '529', '13', '530', '533', '627', '754', '725',
 							  '655', '511', '610', '710', '740', '652', '732', '750', '608', '723', '545', '658', '549', '641', '625', '756', '648', '604',
@@ -944,11 +942,9 @@ function updateScheduledTimes() {
 					  '2201', '2122', '2109', '2103', '2219', '2107', '2222', '2203', '2227', '2240', '2136', '2101', '2208', '2148', '2114', '2216',
 					  '2206', '2221', '2152', '2224', '2126', '2137', '2151', '2213', '2238', '2108', '2124', '2209', '2144', '2149', '2113', '2156',
 					  '2142', '2242', '2104', '2112', '2233', '2111', '2102', '2133', '2202', '2300', '2116', '2248', '2153', '2132', '2127']
-		};
-	}
-	// Spirit Air Lines
-	else {
-		flightDepTimes = {
+		}
+    else: # Sprit Air Lines
+        flightDepTimes = {
 			'Early Morning': ['729', '5', '600', '730', '515', '525', '535', '555', '605', '723', '10', '540', '700', '710', '720', '755', '740', '711', '745',
 							  '545', '59', '635', '530', '110', '615', '645', '650', '750', '450', '721', '35', '520', '620', '735', '500', '550', '725',
 							  '709', '228', '622', '717', '510', '626', '715', '718', '610', '655', '609', '758', '714', '628', '722', '640', '17', '630', '55',
@@ -1023,47 +1019,21 @@ function updateScheduledTimes() {
 					  '2239', '2226', '2349', '2116', '2221', '2335', '2340', '2128', '2206', '2237', '2232', '2244', '2201', '2305', '2211', '2314',
 					  '2207', '2246', '2156', '2152', '2302', '2238', '2303', '2101', '2339', '2325', '2243', '2222', '2319', '2307', '2133', '2223',
 					  '2216', '2114', '2313', '2332', '2256', '2327', '2328', '2344', '2331', '2301', '2352', '2326']
-		};
-	}
-	
-	const departures = flightDepTimes[selectedTimeBlock]
-	
-	// Sort the departures array
-	departures.sort((a, b) => parseInt(a) - parseInt(b));
-	
-	// Clear existing options
-	scheduledDepartures.innerHTML = ''; 
-	
-	// Add a default disabled option
-    let defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.text = ' --Select departure time-- ';
-    defaultOption.disabled = true;
-    defaultOption.selected = true;
-    scheduledDepartures.appendChild(defaultOption);
-	
-	// Populate new options
-    departures.forEach(depart => {
-        let option = document.createElement('option');
-        option.value = depart;
-        option.text = formatTime(depart);
-        scheduledDepartures.appendChild(option);
-    });
-	
-	updateArrivalTimes(); 
-}
+		}
+    
+    # Get the list for the selected time of day
+    times = flightDepTimes.get(selectTimeOfDay, [])
+    
+    # Format and sort the times
+    formatted_times = sorted([format_time(time) for time in times])
+        
+    return formatted_times
 
-function updateArrivalTimes() {
-	var flightArrTimes = {};
-		
-	const carrier = document.getElementById('carrier'); 
-	const depTimeBlock = document.getElementById('depTimeBlock'); 
-	const scheduledArrivals = document.getElementById('scheduledArrTime');
-	const selectedCarrier = carrier.value; 
-	const selectedTimeBlock = depTimeBlock.value; 
-	
-	if (selectedCarrier == 'United') {
-		flightArrTimes = {
+def updateArrivalTimes(selectedTimeOfDay): 
+    flightArrTimes = {}
+
+    if (selectCarrier == 'United Air Lines Inc.'): 
+        flightArrTimes = {
 			'Early Morning': ['930', '1602', '1330', '841', '837', '1035', '1131', '1031', '525', '843', '1009', '929', '1007', '950', '852', '857', '1043', '1006',
 							  '1115', '1032', '1004', '750', '742', '830', '1303', '1000', '1103', '736', '730', '724', '916', '943', '1021', '738', '944',
 							  '959', '1212', '939', '828', '839', '955', '948', '856', '855', '1244', '938', '745', '1102', '932', '1028', '725', '842', '1130',
@@ -1298,10 +1268,9 @@ function updateArrivalTimes() {
 					  '2149', '128', '221', '511', '49', '239', '821', '103', '2154',
 					  '2237', '206', '132', '456', '836', '2217', '227', '2222', '620',
 					  '3']
-		};
-	}
-	else if (selectedCarrier == 'Delta') {
-		flightArrTimes = {
+		}   
+    elif (selectCarrier == 'Delta Air Lines Inc.'): 
+        flightArrTimes = {
 			'Early Morning': ['812', '939', '1008', '629', '725', '806', '851', '703', '1238', '926', '848', '920', '841', '824', '1004', '917', '915', '1046',
 							  '1445', '945', '1129', '834', '625', '1011', '937', '1500', '900',
 							  '903', '748', '1030', '1118', '710', '850', '805', '755', '1001',
@@ -1717,10 +1686,9 @@ function updateArrivalTimes() {
 					  '2127', '128', '444', '126', '417', '2130', '2055', '405', '817',
 					  '159', '125', '835', '2154', '520', '2133', '814', '137', '2131',
 					  '2143', '2117']
-		};
-	}
-	else if (selectedCarrier == 'American') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'American Airlines Inc.'):
+        flightArrTimes = {
 			'Early Morning': ['745', '1153', '833', '824', '942', '1132', '914', '950', '928', '855', '733', '759', '746', '924', '839', '933', '1013', '735',
 							  '820', '737', '902', '1003', '1258', '916', '740', '935', '1450',
 							  '1004', '955', '1226', '1222', '1206', '1027', '730', '714', '812',
@@ -2112,10 +2080,9 @@ function updateArrivalTimes() {
 					  '756', '2131', '2143', '735', '116', '449', '2151', '2138', '437',
 					  '2135', '751', '125', '102', '139', '452', '457', '647', '138',
 					  '754']
-		};
-	}
-	else if (selectedCarrier == 'Southwest') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'Southwest Airlines Co.'):
+        flightArrTimes = {
 			'Early Morning': ['635', '1005', '850', '1030', '745', '720', '755', '725', '740', '955', '810', '820', '920', '1000', '750', '930', '800', '705',
 							  '655', '925', '935', '1310', '945', '700', '825', '730', '910',
 							  '835', '950', '1220', '845', '1025', '1115', '1110', '915', '900',
@@ -2196,10 +2163,9 @@ function updateArrivalTimes() {
 					  '2225', '25', '135', '40', '2200', '2145', '2215', '125', '150',
 					  '145', '110', '115', '2230', '130', '140', '2140', '2130', '2120',
 					  '2155', '2115', '2110', '2105', '2125']
-		};
-	}
-	else if (selectedCarrier == 'Allegiant') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'Allegiant Air'):
+        flightArrTimes = {
 			'Early Morning': ['840', '939', '814', '1019', '853', '758', '1144', '847', '1232', '1044', '835', '852', '1051', '845', '841', '1103', '1129', '908',
 							  '843', '1031', '903', '819', '944', '1021', '851', '917', '920',
 							  '848', '909', '833', '844', '1005', '1027', '935', '838', '900',
@@ -2473,10 +2439,9 @@ function updateArrivalTimes() {
 					  '2218', '2223', '2242', '2214', '2216', '2159', '2153', '2144',
 					  '2156', '2203', '2202', '2227', '2208', '2228', '2235', '2207',
 					  '2220', '2230', '2158', '2210', '2206']
-		};
-	}
-	else if (selectedCarrier == 'JetBlue') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'JetBlue Airways'):
+        flightArrTimes = {
 			'Early Morning': ['920', '930', '1609', '936', '850', '1050', '916', '1220', '925', '607', '917', '756', '1029', '1109', '909', '1004', '1022', '812',
 							  '1101', '915', '833', '1005', '1111', '855', '919', '1046', '451',
 							  '940', '1001', '755', '739', '841', '630', '840', '1028', '938',
@@ -2796,10 +2761,9 @@ function updateArrivalTimes() {
 					  '2253', '429', '250', '518', '446', '233', '714', '458', '132',
 					  '340', '122', '742', '406', '2230', '2224', '221', '708', '430',
 					  '604', '638']
-		};
-	}
-	else if (selectedCarrier == 'PSA') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'PSA Airlines Inc.'):
+        flightArrTimes = {
 			'Early Morning': ['755', '806', '923', '1010', '905', '918', '900', '914', '712', '750', '943', '745', '646', '809', '929', '915', '1015', '824',
 							  '917', '807', '759', '825', '808', '919', '655', '1017', '851',
 							  '709', '730', '641', '1021', '726', '815', '924', '920', '930',
@@ -2989,10 +2953,9 @@ function updateArrivalTimes() {
 					  '2158', '2236', '18', '2149', '2223', '2254', '7', '23', '2212',
 					  '2221', '2210', '2231', '2228', '2132', '33', '2208', '2247',
 					  '213']
-		};
-	}
-	else if (selectedCarrier == 'Endeavor') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'Endeavor Air Inc.'):
+        flightArrTimes = {
 			'Early Morning': ['739', '746', '736', '847', '611', '654', '820', '759', '653', '844', '729', '733', '857', '904', '753', '741', '630', '700',
 							  '900', '930', '959', '1002', '941', '711', '827', '737', '658',
 							  '610', '929', '816', '841', '1055', '932', '725', '909', '1000',
@@ -3198,10 +3161,9 @@ function updateArrivalTimes() {
 					  '2318', '2224', '24', '34', '2337', '3', '2122', '2118', '2327',
 					  '2107', '2326', '2221', '31', '13', '2342', '2155', '2106', '2314',
 					  '35', '2150', '5', '2156', '2121', '2144', '2200', '2214']
-		};
-	}
-	else if (selectedCarrier == 'Alaska') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'Alaska Airlines Inc.'):
+        flightArrTimes = {
 			'Early Morning': ['954', '844', '845', '804', '930', '1023', '957', '624', '613', '935', '916', '847', '736', '1200', '815', '900', '959', '856',
 							  '1001', '953', '620', '924', '1015', '858', '1530', '1551', '915',
 							  '1014', '639', '1054', '955', '829', '1214', '650', '1006', '631',
@@ -3509,10 +3471,9 @@ function updateArrivalTimes() {
 					  '233', '2309', '200', '2317', '656', '2313', '28', '2210', '16',
 					  '2302', '21', '38', '438', '618', '621', '527', '20', '126', '27',
 					  '2229', '109', '115', '2209', '19', '459', '8', '639', '609']
-		};
-	}
-	else if (selectedCarrier == 'Frontier') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'Frontier Airlines Inc.'):
+        flightArrTimes = {
 			'Early Morning': ['1001', '919', '1007', '741', '920', '640', '1116', '1033', '737', '924', '1004', '930', '734', '728', '838', '1141', '958', '916',
 							  '553', '740', '811', '819', '803', '800', '822', '832', '827',
 							  '639', '1109', '1003', '806', '1134', '844', '401', '1243', '1343',
@@ -3873,10 +3834,9 @@ function updateArrivalTimes() {
 					  '2155', '148', '120', '611', '602', '656', '311', '532', '446',
 					  '717', '414', '643', '401', '632', '529', '349', '733', '345',
 					  '2210', '747', '431', '254', '738', '359']
-		};
-	}
-	else if (selectedCarrier == 'Envoy') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'Envoy Air'):
+        flightArrTimes = {
 			'Early Morning': ['1035', '857', '726', '910', '725', '1011', '912', '729', '750', '1039', '930', '826', '619', '718', '917', '752', '841', '925',
 							  '852', '848', '835', '854', '902', '853', '740', '855', '913',
 							  '742', '905', '730', '1019', '906', '738', '849', '842', '920',
@@ -4099,10 +4059,9 @@ function updateArrivalTimes() {
 					  '2244', '2230', '2308', '2155', '11', '2207', '2219', '2314',
 					  '2229', '26', '2156', '2218', '2202', '22', '118', '2204', '2243',
 					  '32', '43', '133', '134']
-		};
-	}
-	else if (selectedCarrier == 'Hawaiian') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'Hawaiian Airlines Inc.'):
+        flightArrTimes = {
 			'Early Morning': ['540', '837', '736', '800', '1125', '1130', '1105', '1100', '935', '819', '1540', '710', '955', '1145', '649', '1055', '650', '749',
 							  '814', '832', '1005', '930', '645', '810', '731', '747', '801',
 							  '735', '1050', '630', '748', '1620', '625', '652', '805', '821',
@@ -4229,10 +4188,9 @@ function updateArrivalTimes() {
 					  '2139', '2209', '2223', '740', '2140', '2323', '2205', '2225',
 					  '2134', '520', '610', '2215', '2248', '2204', '2158', '2153',
 					  '745', '2224', '2138', '2234', '540', '2207', '2250', '700']
-		};
-	}
-	else if (selectedCarrier == 'SkyWest') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'SkyWest Airlines Inc.'):
+        flightArrTimes = {
 			'Early Morning': ['855', '805', '1009', '827', '905', '845', '642', '930', '1050', '900', '605', '907', '755', '831', '811', '903', '754', '1003',
 							  '1100', '656', '950', '947', '727', '1044', '843', '910', '653',
 							  '750', '722', '1129', '716', '943', '721', '759', '705', '948',
@@ -4488,10 +4446,9 @@ function updateArrivalTimes() {
 					  '51', '29', '2316', '2319', '34', '2146', '39', '43', '57', '19',
 					  '301', '58', '2135', '2136', '137', '59', '1', '2126', '2106',
 					  '236', '2140', '241', '134', '53', '158']
-		};
-	}
-	else if (selectedCarrier == 'Republic') {
-		flightArrTimes = {
+		}
+    elif (selectCarrier == 'Republic Airline'):
+        flightArrTimes = {
 			'Early Morning': ['803', '925', '630', '938', '956', '930', '824', '1100', '832', '908', '1030', '1000', '958', '1051', '813', '729', '726', '715',
 							  '759', '746', '1050', '738', '835', '906', '1009', '1110', '710',
 							  '929', '1036', '959', '857', '816', '800', '734', '744', '826',
@@ -4708,11 +4665,9 @@ function updateArrivalTimes() {
 					  '2235', '2244', '2252', '8', '2210', '2333', '2342', '2219',
 					  '2238', '2220', '1', '2203', '2215', '4', '2241', '201', '54',
 					  '2208', '25', '2237', '2214', '13', '131', '2204', '151', '42']
-		};
-	}
-	// Spirit Air Lines
-	else {
-		flightArrTimes = {
+		}
+    else: # Sprit Air Lines
+        flightArrTimes = {
 			'Early Morning': ['816', '535', '733', '851', '1012', '845', '927', '823', '1359', '723', '900', '926', '537', '913', '743', '1107', '754', '959',
 							  '1109', '1013', '935', '705', '402', '838', '925', '1055', '750',
 							  '834', '833', '517', '852', '736', '1128', '1228', '1046', '701',
@@ -5042,49 +4997,118 @@ function updateArrivalTimes() {
 					  '746', '712', '408', '246', '442', '522', '2129', '237', '2234',
 					  '154', '346', '2145', '2150', '2142', '243', '2222', '229', '258',
 					  '247']
-		};
-	}
-	
-	const arrivals = flightArrTimes[selectedTimeBlock]
-	
-	// Sort the departures array
-	arrivals.sort((a, b) => parseInt(a) - parseInt(b));
-	
-	// Clear existing options
-	scheduledArrivals.innerHTML = ''; 
-	
-	// Add a default disabled option
-    let defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.text = ' --Select arrival time-- ';
-    defaultOption.disabled = true;
-    defaultOption.selected = true;
-    scheduledArrivals.appendChild(defaultOption);
-	
-	// Populate new options
-    arrivals.forEach(arrive => {
-        let option = document.createElement('option');
-        option.value = arrive;
-        option.text = formatTime(arrive);
-        scheduledArrivals.appendChild(option);
-    });
-}
+		}
+        
+    # Get the list for the selected time of day
+    times = flightArrTimes.get(selectTimeOfDay, [])
+    
+    # Format and sort the times
+    formatted_times = sorted([format_time(time) for time in times])
+        
+    return formatted_times
 
-function formatTime(time) {
-    const hours = Math.floor(time / 100);
-    const minutes = time % 100;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-}
-      
-function predictValue() {
-	const formData = new FormData(document.getElementById('flightForm'));
-    fetch('/predict', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('prediction').innerText = `Predicted Value: {data.prediction}`;
-    })
-   .catch(error => console.error('Error:', error));
-}
+# Load the training data
+def load_training_data(file_path):
+    X_train = pd.read_csv(file_path)
+    # Ensure only the features we need are in X_train
+    required_features = ['Carrier_Name', 'Dep_Time_Block_Group', 'Month', 'Year', 'Day', 
+                         'Scheduled_Arrival_Time', 'Scheduled_Departure_Time']
+    X_train = X_train[required_features]
+    return X_train
+
+# Load X_train data
+X_train = load_training_data(r'..\..\..\data\Flight_Train_Data.csv')
+
+@st.cache_data
+def flightPredict(): 
+    # Create and fit the preprocessor
+    preprocessor = PrepProcesor()
+    preprocessor.fit(X_train)
+    
+    row = np.array([selectCarrier, selectTimeOfDay, selectMonth, selectYear,
+                    selectDay, selectScheduledArrTime, selectScheduledDepTime])
+    
+    X = pd.DataFrame([row], columns=columns)
+    
+    # Preprocess the input data
+    X_processed = preprocessor.transform(X)
+    
+    # Grab first prediction of model
+    prediction = model.predict(X_processed)[0]
+    
+    if (prediction == 1): 
+        st.success('Flight Delayed :thumbsdown:')
+    else: 
+        st.error('Flight Not Delayed :thumbsup:')
+        
+######### initial setup 
+currentYear = datetime.now().year
+carrierNames = ['United Air Lines Inc.', 'Delta Air Lines Inc.', 
+                'American Airlines Inc.', 'Southwest Airlines Co.',
+                'Allegiant Air', 'JetBlue Airways', 'PSA Airlines Inc.',
+                'Endeavor Air Inc.', 'Alaska Airlines Inc.',
+                'Frontier Airlines Inc.', 'Envoy Air', 'Hawaiian Airlines Inc.',
+                'SkyWest Airlines Inc.', 'Republic Airline', 'Spirit Air Lines']
+month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+         'Oct', 'Nov', 'Dec']
+day = [day for day in range(1,32)]
+year = [year for year in range(currentYear, 2029)]
+depTimeBlock = ['Early Morning', 'Morning', 'Early Afternoon', 'Afternoon', 
+                'Evening','Night']
+
+st.set_page_config(page_title='FSP@streamlit', layout='wide')
+st.title(':orange[Flight Status Predictor]')
+
+############ Set the parameters ##########################
+# Dropdown menu to select carrier 
+selectCarrier = st.selectbox('Select :orange[Carrier]', options=carrierNames, index=None)
+
+# Dropdown menu to select month 
+selectMonth = st.selectbox('Select :orange[Month]', options=month, index=None)
+ 
+# Dropdown menu to select day
+selectDay = st.selectbox('Select :orange[Day]', options=day, index=None)
+
+# Dropdown menu to select year
+selectYear = st.selectbox('Select :orange[Year]', options=year, index=None)
+
+# Dropdown menu to select the time of day
+selectTimeOfDay = st.selectbox('Select :orange[Departure Time of Day]', options=depTimeBlock, index=None)
+
+# Dropdown menu to select the scheduled departure time
+depTimes = updateScheduledTimes(selectTimeOfDay)
+selectScheduledDepTime = st.selectbox('Select :orange[Scheduled Departure Time]', options=depTimes, index=None)
+if (selectScheduledDepTime != None):
+    hours, minutes = selectScheduledDepTime.split(':')
+    selectScheduledDepTime = int(hours) * 100 + int(minutes)
+    
+# Dropdown menu to select the scheduled arrival time
+arrTimes = updateArrivalTimes(selectTimeOfDay)
+selectScheduledArrTime = st.selectbox('Select :orange[Scheduled Arrival Time]', options=arrTimes, index=None)
+if (selectScheduledArrTime != None):
+    hours, minutes = selectScheduledArrTime.split(':')
+    selectScheduledArrTime = int(hours) * 100 + int(minutes)
+    
+if (selectCarrier != None and selectMonth != None and selectDay != None and
+    selectYear!= None and  selectTimeOfDay != None and selectScheduledDepTime != None and
+    selectScheduledArrTime != None):
+    flightPredictButton = st.button('Generate Flight Prediction', on_click=flightPredict)
+else: 
+    flightPredictButton = st.button('Generate Flight Prediction', disabled=True)
+ 
+ 
+
+        
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
