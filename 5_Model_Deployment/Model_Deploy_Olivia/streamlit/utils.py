@@ -36,7 +36,5 @@ class PrepProcesor(BaseEstimator, TransformerMixin):
         # Drop original categorical columns
         X_transformed = X_transformed.drop(columns=self.categorical_features)
         
-        return X_transformed
-
-columns = ['Carrier_Name', 'Dep_Time_Block_Group', 'Month', 'Year', 'Day', 
-           'Scheduled_Arrival_Time', 'Scheduled_Departure_Time']
+        # Convert final result to a numpy array
+        return X_transformed.values
