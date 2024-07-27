@@ -3,13 +3,25 @@ from utils import PrepProcesor
 import numpy as np 
 import pandas as pd
 from datetime import datetime
+import calendar
 import joblib 
 
 def format_time(time_str):
+    # Ensure the time string is 4 digits long
+    time_str = time_str.zfill(4)
+    
+    # Handle special cases like '2400'
+    if time_str == '2400': 
+        return '00:00'
+    
     # Convert to datetime object for easier sorting
-    time_obj = datetime.strptime(time_str.zfill(4), "%H%M")            
-    # Format as "hh:mm"
-    return time_obj.strftime("%H:%M")
+    try: 
+        time_obj = datetime.strptime(time_str, "%H%M")            
+        # Format as "hh:mm"
+        return time_obj.strftime("%H:%M")
+    except ValueError: 
+        # If conversion fails, return the original string
+        return time_str
 
 def updateScheduledTimes(selectedTimeOfDay): 
     flightDepTimes = {}
@@ -5002,6 +5014,11 @@ def updateArrivalTimes(selectedTimeOfDay):
     formatted_times = sorted([format_time(time) for time in times])
         
     return formatted_times
+
+# Function to get the number of days in a month
+def get_days_in_month(year, month):
+    _, days = calendar.monthrange(year, month)
+    return days
     
 ######### initial setup 
 currentYear = datetime.now().year
@@ -5018,7 +5035,7 @@ year = [year for year in range(currentYear, 2029)]
 depTimeBlock = ['Early Morning', 'Morning', 'Early Afternoon', 'Afternoon', 
                 'Evening','Night']
 
-st.set_page_config(page_title='FSP@streamlit', layout='wide')
+st.set_page_config(page_title='FSP@streamlit', layout='centered')
 st.title(':orange[Flight Status Predictor]')
 
 # Load the training data
@@ -5068,21 +5085,43 @@ def flightPredict(input_data):
     prediction = model.predict(X_processed)[0]
     
     return prediction
+
+######### About the app ###############
+markdown_about_msg = """
+        
+        Welcome to the Flight Status Predictor App!
     
+        This app aims to predict whether the arrival time of the flight 
+        will be delayed for more than 15 minutes or not.
+
+    """
+st.markdown(markdown_about_msg)
+
 ############ Set the parameters ##########################
 
 # Dropdown menu to select carrier 
 selectCarrier = st.selectbox('Select :orange[Carrier]', options=carrierNames, index=None)
     
-# Dropdown menu to select month 
-selectMonth = st.selectbox('Select :orange[Month]', options=month, index=None)
-     
-# Dropdown menu to select day
-selectDay = st.selectbox('Select :orange[Day]', options=day, index=None)
-    
 # Dropdown menu to select year
 selectYear = st.selectbox('Select :orange[Year]', options=year, index=None)
-    
+
+# Dropdown menu to select month 
+selectMonth = st.selectbox('Select :orange[Month]', options=month, index=None)
+
+emp = st.empty()
+# Dynamically generate days based on selected year and month
+if selectYear and selectMonth: 
+    month_index = month.index(selectMonth) + 1
+    days_in_month = get_days_in_month(selectYear, month_index)
+    day = list(range(1, days_in_month + 1))
+    # Dropdown menu to select day
+    selectDay = st.selectbox('Select :orange[Day]', options=day, index=None)
+else: 
+    if selectYear != None or selectMonth != None: 
+        selectDay = st.selectbox('Select :orange[Day]', options=day, index=None, disabled=True)
+    else: 
+        selectDay = emp.selectbox('Select :orange[Day]', options=day, index=None, disabled=True)
+        
 # Dropdown menu to select the time of day
 selectTimeOfDay = st.selectbox('Select :orange[Departure Time of Day]', options=depTimeBlock, index=None)
     
