@@ -1,13 +1,9 @@
 import streamlit as st 
-from utils import PrepProcesor, columns 
+from utils import PrepProcesor
 import numpy as np 
 import pandas as pd
 from datetime import datetime
 import joblib 
-
-model_path = r'..\models\flight_model.pkl'
-
-model = joblib.load(model_path)
 
 def format_time(time_str):
     # Convert to datetime object for easier sorting
@@ -5006,41 +5002,7 @@ def updateArrivalTimes(selectedTimeOfDay):
     formatted_times = sorted([format_time(time) for time in times])
         
     return formatted_times
-
-# Load the training data
-def load_training_data(file_path):
-    X_train = pd.read_csv(file_path)
-    # Ensure only the features we need are in X_train
-    required_features = ['Carrier_Name', 'Dep_Time_Block_Group', 'Month', 'Year', 'Day', 
-                         'Scheduled_Arrival_Time', 'Scheduled_Departure_Time']
-    X_train = X_train[required_features]
-    return X_train
-
-# Load X_train data
-X_train = load_training_data(r'..\..\..\data\Flight_Train_Data.csv')
-
-@st.cache_data
-def flightPredict(): 
-    # Create and fit the preprocessor
-    preprocessor = PrepProcesor()
-    preprocessor.fit(X_train)
     
-    row = np.array([selectCarrier, selectTimeOfDay, selectMonth, selectYear,
-                    selectDay, selectScheduledArrTime, selectScheduledDepTime])
-    
-    X = pd.DataFrame([row], columns=columns)
-    
-    # Preprocess the input data
-    X_processed = preprocessor.transform(X)
-    
-    # Grab first prediction of model
-    prediction = model.predict(X_processed)[0]
-    
-    if (prediction == 1): 
-        st.success('Flight Delayed :thumbsdown:')
-    else: 
-        st.error('Flight Not Delayed :thumbsup:')
-        
 ######### initial setup 
 currentYear = datetime.now().year
 carrierNames = ['United Air Lines Inc.', 'Delta Air Lines Inc.', 
@@ -5058,6 +5020,55 @@ depTimeBlock = ['Early Morning', 'Morning', 'Early Afternoon', 'Afternoon',
 
 st.set_page_config(page_title='FSP@streamlit', layout='wide')
 st.title(':orange[Flight Status Predictor]')
+
+# Load the training data
+def load_training_data(file_path):
+    X_train = pd.read_csv(file_path)
+    # Ensure only the features we need are in X_train
+    required_features = ['Carrier_Name', 'Dep_Time_Block_Group', 'Month', 'Year', 'Day', 
+                         'Scheduled_Arrival_Time', 'Scheduled_Departure_Time']
+    X_train = X_train[required_features]
+    return X_train
+
+@st.cache_resource
+def load_model_and_preprocessor(): 
+    model_path = r'..\models\flight_model.pkl'
+    model = joblib.load(model_path)
+    
+    # Create and fit the preprocessor
+    preprocessor = PrepProcesor()
+    
+    # Load X_train and fit preprocessor
+    #X_train = load_training_data(r'..\..\..\data\Flight_Train_Data.csv')
+    X_train = pd.read_csv(r'..\..\..\data\Flight_Train_Data.csv')
+    preprocessor.fit(X_train)
+    
+    # Save the original predict method
+    original_predict = model.predict
+    
+    # Create a function to remove feature names before prediction
+    def predict_without_feature_names(X):
+        if isinstance(X, pd.DataFrame): 
+            X = X.values
+        return original_predict(X)
+    
+    # Replace the model's predict method with the new function
+    model.predict = predict_without_feature_names
+    
+    return model, preprocessor
+
+model, preprocessor = load_model_and_preprocessor()
+
+def flightPredict(input_data): 
+    X = pd.DataFrame([input_data])
+    
+    # Preprocess the input data
+    X_processed = preprocessor.transform(X)
+    
+    # Grab first prediction of model
+    prediction = model.predict(X_processed)[0]
+    
+    return prediction
 
 ############ Set the parameters ##########################
 # Dropdown menu to select carrier 
@@ -5092,15 +5103,28 @@ if (selectScheduledArrTime != None):
 if (selectCarrier != None and selectMonth != None and selectDay != None and
     selectYear!= None and  selectTimeOfDay != None and selectScheduledDepTime != None and
     selectScheduledArrTime != None):
-    flightPredictButton = st.button('Generate Flight Prediction', on_click=flightPredict)
+    if st.button('Generate Flight Prediction'): 
+        input_data = {
+            'Carrier_Name': selectCarrier, 
+            'Dep_Time_Block_Group': selectTimeOfDay,
+            'Month': selectMonth, 
+            'Year': selectYear, 
+            'Day': selectDay, 
+            'Scheduled_Arrival_Time': selectScheduledArrTime, 
+            'Scheduled_Departure_Time': selectScheduledDepTime
+        }
+        
+        # Make prediction
+        result = flightPredict(input_data)
+        
+        # Display result
+        if (result == 1): 
+            st.error('Flight Delayed :thumbsdown:')
+        else: 
+            st.success('Flight Not Delayed :thumbsup:')
 else: 
     flightPredictButton = st.button('Generate Flight Prediction', disabled=True)
- 
- 
-
-        
-     
- 
+         
  
  
  
