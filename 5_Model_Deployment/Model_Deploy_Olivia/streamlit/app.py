@@ -5039,8 +5039,7 @@ def load_model_and_preprocessor():
     preprocessor = PrepProcesor()
     
     # Load X_train and fit preprocessor
-    #X_train = load_training_data(r'..\..\..\data\Flight_Train_Data.csv')
-    X_train = pd.read_csv(r'..\..\..\data\Flight_Train_Data.csv')
+    X_train = load_training_data(r'..\..\..\data\Flight_Train_Data.csv')
     preprocessor.fit(X_train)
     
     # Save the original predict method
