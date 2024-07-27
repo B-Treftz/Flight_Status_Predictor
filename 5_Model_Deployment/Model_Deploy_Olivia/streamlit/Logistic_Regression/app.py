@@ -5029,17 +5029,17 @@ def load_training_data(file_path):
                          'Scheduled_Arrival_Time', 'Scheduled_Departure_Time']
     X_train = X_train[required_features]
     return X_train
-
+    
 @st.cache_resource
 def load_model_and_preprocessor(): 
-    model_path = r'..\models\flight_model.pkl'
+    model_path = r'..\..\models\flight_model.pkl'
     model = joblib.load(model_path)
     
     # Create and fit the preprocessor
     preprocessor = PrepProcesor()
     
     # Load X_train and fit preprocessor
-    X_train = load_training_data(r'..\..\..\data\Flight_Train_Data.csv')
+    X_train = load_training_data(r'..\..\..\..\data\Flight_Train_Data.csv')
     preprocessor.fit(X_train)
     
     # Save the original predict method
@@ -5068,37 +5068,38 @@ def flightPredict(input_data):
     prediction = model.predict(X_processed)[0]
     
     return prediction
-
+    
 ############ Set the parameters ##########################
+
 # Dropdown menu to select carrier 
 selectCarrier = st.selectbox('Select :orange[Carrier]', options=carrierNames, index=None)
-
+    
 # Dropdown menu to select month 
 selectMonth = st.selectbox('Select :orange[Month]', options=month, index=None)
- 
+     
 # Dropdown menu to select day
 selectDay = st.selectbox('Select :orange[Day]', options=day, index=None)
-
+    
 # Dropdown menu to select year
 selectYear = st.selectbox('Select :orange[Year]', options=year, index=None)
-
+    
 # Dropdown menu to select the time of day
 selectTimeOfDay = st.selectbox('Select :orange[Departure Time of Day]', options=depTimeBlock, index=None)
-
+    
 # Dropdown menu to select the scheduled departure time
 depTimes = updateScheduledTimes(selectTimeOfDay)
 selectScheduledDepTime = st.selectbox('Select :orange[Scheduled Departure Time]', options=depTimes, index=None)
 if (selectScheduledDepTime != None):
     hours, minutes = selectScheduledDepTime.split(':')
     selectScheduledDepTime = int(hours) * 100 + int(minutes)
-    
+        
 # Dropdown menu to select the scheduled arrival time
 arrTimes = updateArrivalTimes(selectTimeOfDay)
 selectScheduledArrTime = st.selectbox('Select :orange[Scheduled Arrival Time]', options=arrTimes, index=None)
 if (selectScheduledArrTime != None):
     hours, minutes = selectScheduledArrTime.split(':')
     selectScheduledArrTime = int(hours) * 100 + int(minutes)
-    
+        
 if (selectCarrier != None and selectMonth != None and selectDay != None and
     selectYear!= None and  selectTimeOfDay != None and selectScheduledDepTime != None and
     selectScheduledArrTime != None):
@@ -5112,10 +5113,10 @@ if (selectCarrier != None and selectMonth != None and selectDay != None and
             'Scheduled_Arrival_Time': selectScheduledArrTime, 
             'Scheduled_Departure_Time': selectScheduledDepTime
         }
-        
+            
         # Make prediction
         result = flightPredict(input_data)
-        
+            
         # Display result
         if (result == 1): 
             st.error('Flight Delayed :thumbsdown:')
@@ -5123,7 +5124,7 @@ if (selectCarrier != None and selectMonth != None and selectDay != None and
             st.success('Flight Not Delayed :thumbsup:')
 else: 
     flightPredictButton = st.button('Generate Flight Prediction', disabled=True)
-         
+             
  
  
  
