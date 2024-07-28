@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Delay Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="number"],
+        select {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Flight Delay Prediction</h1>
+        <form id="prediction-form">
+            <label for="year">Year:</label>
+            <select id="year" name="year">
+                <option value="2023">2023</option>
+                <option value="2024" selected>2024</option>
+            </select>
+
+            <label for="month">Month:</label>
+            <select id="month" name="month" required>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+
+            <label for="day">Day:</label>
+            <select id="day" name="day" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+            </select>
+
+            <label for="dep_time_block">Departure Time Block:</label>
+            <select id="dep_time_block" name="dep_time_block" required>
+                <option value="Night">Night</option>
+                <option value="Early Morning">Early Morning</option>
+                <option value="Morning">Morning</option>
+                <option value="Afternoon">Afternoon</option>
+                <option value="Early Afternoon">Early Afternoon</option>
+                <option value="Evening">Evening</option>
+            </select>
+
+            <label for="carrier">Carrier:</label>
+            <select id="carrier" name="carrier" required>
+                <option value="Southwest Airlines Co.">Southwest Airlines Co.</option>
+                <option value="United Air Lines Inc.">United Air Lines Inc.</option>
+                <option value="American Airlines Inc.">American Airlines Inc.</option>
+                <option value="Spirit Air Lines">Spirit Air Lines</option>
+                <option value="SkyWest Airlines Inc.">SkyWest Airlines Inc.</option>
+                <option value="Delta Air Lines Inc.">Delta Air Lines Inc.</option>
+                <option value="Endeavor Air Inc.">Endeavor Air Inc.</option>
+                <option value="PSA Airlines Inc.">PSA Airlines Inc.</option>
+                <option value="Envoy Air">Envoy Air</option>
+                <option value="Hawaiian Airlines Inc.">Hawaiian Airlines Inc.</option>
+                <option value="Republic Airline">Republic Airline</option>
+                <option value="JetBlue Airways">JetBlue Airways</option>
+                <option value="Allegiant Air">Allegiant Air</option>
+                <option value="Frontier Airlines Inc.">Frontier Airlines Inc.</option>
+                <option value="Alaska Airlines Inc.">Alaska Airlines Inc.</option>
+            </select>
+
+            <input type="submit" value="Predict">
+        </form>
+        <div id="result"></div>
+    </div>
+    
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Collect form data
+            const year = document.getElementById('year').value;
+            const month = document.getElementById('month').value;
+            const day = document.getElementById('day').value;
+            const depTimeBlock = document.getElementById('dep_time_block').value;
+            const carrier = document.getElementById('carrier').value;
+            
+            // Create data object
+            const data = {
+                Year: year,
+                Month: month,
+                Day: day,
+                Dep_Time_Block_Group: depTimeBlock,
+                Carrier: carrier
+            };
+            
+            // Send data to server
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.textContent = result.message;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
