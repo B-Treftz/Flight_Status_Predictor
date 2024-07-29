@@ -1,4 +1,6 @@
 function updateScheduledTimes() {
+	event.preventDefault();
+	
 	var flightDepTimes = {};
 		
 	const carrier = document.getElementById('carrier'); 
@@ -5084,7 +5086,8 @@ function predictValue() {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById('prediction').innerText = `Predicted Value: {data.prediction}`;
+		const pred = document.getElementById('prediction')
+		pred.innerText = data.message;
     })
    .catch(error => console.error('Error:', error));
 }
