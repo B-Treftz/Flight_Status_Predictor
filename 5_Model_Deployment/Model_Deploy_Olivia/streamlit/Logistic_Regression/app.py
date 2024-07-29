@@ -1,5 +1,4 @@
 import streamlit as st 
-from utils import PrepProcesor
 import numpy as np 
 import pandas as pd
 from datetime import datetime
@@ -5038,38 +5037,13 @@ depTimeBlock = ['Early Morning', 'Morning', 'Early Afternoon', 'Afternoon',
 st.set_page_config(page_title='FSP@streamlit', layout='centered')
 st.title(':orange[Flight Status Predictor]')
 
-# Load the training data
-def load_training_data(file_path):
-    X_train = pd.read_csv(file_path)
-    # Ensure only the features we need are in X_train
-    required_features = ['Carrier_Name', 'Dep_Time_Block_Group', 'Month', 'Year', 'Day', 
-                         'Scheduled_Arrival_Time', 'Scheduled_Departure_Time']
-    X_train = X_train[required_features]
-    return X_train
-    
 @st.cache_resource
 def load_model_and_preprocessor(): 
     model_path = r'..\..\models\flight_model.pkl'
+    preprocessor_path = r'..\..\preprocessor\flight_preprocessor.pkl'
+    
     model = joblib.load(model_path)
-    
-    # Create and fit the preprocessor
-    preprocessor = PrepProcesor()
-    
-    # Load X_train and fit preprocessor
-    X_train = load_training_data(r'..\..\..\..\data\Flight_Train_Data.csv')
-    preprocessor.fit(X_train)
-    
-    # Save the original predict method
-    original_predict = model.predict
-    
-    # Create a function to remove feature names before prediction
-    def predict_without_feature_names(X):
-        if isinstance(X, pd.DataFrame): 
-            X = X.values
-        return original_predict(X)
-    
-    # Replace the model's predict method with the new function
-    model.predict = predict_without_feature_names
+    preprocessor = joblib.load(preprocessor_path)
     
     return model, preprocessor
 
