@@ -2,7 +2,6 @@ streamlit
 numpy
 pandas
 datetime
-calendar
 joblib
 scikit-learn
 scipy
