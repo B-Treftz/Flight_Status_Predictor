@@ -1,15 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 from flask_bootstrap import Bootstrap
-import numpy as np
 import pandas as pd
 import joblib
-from datetime import datetime
 
 app = Flask(__name__)
 Bootstrap(app)
 
-model_path = r'..\..\models\flight_model.pkl'
-preprocessor_path = r'..\..\preprocessor\flight_preprocessor.pkl'
+model_path = 'models/flight_model.pkl'
+preprocessor_path = 'preprocessor/flight_preprocessor.pkl'
 
 model = joblib.load(model_path)
 preprocessor = joblib.load(preprocessor_path)
@@ -57,8 +55,8 @@ def predict():
     return jsonify(message=message)
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    #app.run(host='0.0.0.0', port=8080)
+    #app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080)
     
 
 
