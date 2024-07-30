@@ -6,4 +6,3 @@ calendar
 joblib
 scikit-learn
 scipy
-flask_bootstrap
