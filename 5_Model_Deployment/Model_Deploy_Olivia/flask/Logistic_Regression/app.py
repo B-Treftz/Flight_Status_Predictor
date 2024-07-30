@@ -3,7 +3,6 @@ from flask_bootstrap import Bootstrap
 import numpy as np
 import pandas as pd
 import joblib
-
 from datetime import datetime
 
 app = Flask(__name__)
