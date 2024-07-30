@@ -1,5 +1,4 @@
 streamlit
-utils
 numpy
 pandas
 datetime
