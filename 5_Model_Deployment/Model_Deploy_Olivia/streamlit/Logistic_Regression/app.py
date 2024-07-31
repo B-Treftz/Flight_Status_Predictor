@@ -4,6 +4,8 @@ import pandas as pd
 from datetime import datetime
 import calendar
 import joblib 
+import sys
+import path
 
 def format_time(time_str):
     # Ensure the time string is 4 digits long
@@ -5039,8 +5041,11 @@ st.title(':orange[Flight Status Predictor]')
 
 @st.cache_resource
 def load_model_and_preprocessor(): 
-    model_path = 'models/flight_model.pkl'
-    preprocessor_path = 'preprocessor/flight_preprocessor.pkl'
+    dir = path.Path(__file__).abspath()
+    sys.append.path(dir.parent.parent)
+	
+    model_path = './models/flight_model.pkl'
+    preprocessor_path = './preprocessor/flight_preprocessor.pkl'
     
     model = joblib.load(model_path)
     preprocessor = joblib.load(preprocessor_path)
