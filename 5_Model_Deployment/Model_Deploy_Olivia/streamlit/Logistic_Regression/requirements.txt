@@ -5,4 +5,4 @@ datetime
 joblib
 scikit-learn
 scipy
-path
+pathlib
