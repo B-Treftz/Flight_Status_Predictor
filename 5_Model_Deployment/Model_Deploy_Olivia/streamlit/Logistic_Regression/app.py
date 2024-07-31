@@ -5039,8 +5039,8 @@ st.title(':orange[Flight Status Predictor]')
 
 @st.cache_resource
 def load_model_and_preprocessor(): 
-    model_path = 'models\flight_model.pkl'
-    preprocessor_path = 'preprocessor\flight_preprocessor.pkl'
+    model_path = 'flight_model.pkl'
+    preprocessor_path = 'flight_preprocessor.pkl'
     
     model = joblib.load(model_path)
     preprocessor = joblib.load(preprocessor_path)
