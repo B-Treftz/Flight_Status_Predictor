@@ -5043,7 +5043,8 @@ def load_model_and_preprocessor():
     print('Current working directory:', os.getcwd())
     #model_path = 'models/flight_model.pkl'
     model_path = os.path.join(os.path.dirname(__file__), 'models', 'flight_model.pkl')
-    preprocessor_path = 'preprocessor/flight_preprocessor.pkl'
+    #preprocessor_path = 'preprocessor/flight_preprocessor.pkl'
+    preprocessor_path = os.path.join(os.path.dirname(__file__), 'preprocessor', 'flight_preprocessor.pkl')
     
     model = joblib.load(model_path)
     preprocessor = joblib.load(preprocessor_path)
