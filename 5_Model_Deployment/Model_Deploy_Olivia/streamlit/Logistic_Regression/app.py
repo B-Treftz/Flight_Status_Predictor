@@ -5040,7 +5040,7 @@ st.title(':orange[Flight Status Predictor]')
 
 @st.cache_resource
 def load_model_and_preprocessor(): 
-    print(os.getcwd())
+    print('Current working directory:', os.getcwd())
     model_path = 'models/flight_model.pkl'
     preprocessor_path = 'preprocessor/flight_preprocessor.pkl'
     
