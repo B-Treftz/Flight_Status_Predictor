@@ -1,0 +1,7 @@
+streamlit
+numpy
+pandas
+datetime
+joblib
+scikit-learn
+scipy
