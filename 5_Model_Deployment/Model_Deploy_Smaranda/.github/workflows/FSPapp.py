@@ -40,9 +40,16 @@ st.markdown(
 )
 
 @st.cache_resource
-def load_model_and_preprocessor(): 
-    model_path = 'GradientBoosting_best_model_full.pkl'
-    preprocessor_path = 'preprocessor_full.pkl'
+def load_model_and_preprocessor():
+    # Assuming the files are in the same directory as FSPapp.py
+    base_path = os.path.dirname(__file__)
+    model_path = os.path.join(base_path, 'GradientBoosting_best_model_full.pkl')
+    preprocessor_path = os.path.join(base_path, 'preprocessor_full.pkl')
+    
+    if not os.path.exists(model_path):
+        st.error(f"Model file not found: {model_path}")
+    if not os.path.exists(preprocessor_path):
+        st.error(f"Preprocessor file not found: {preprocessor_path}")
     
     model = joblib.load(model_path)
     preprocessor = joblib.load(preprocessor_path)
