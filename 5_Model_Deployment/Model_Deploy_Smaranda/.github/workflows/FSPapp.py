@@ -41,8 +41,8 @@ st.markdown(
 
 @st.cache_resource
 def load_model_and_preprocessor(): 
-    model_path = '/home/ubuntu/GradientBoosting_best_model_full.pkl'
-    preprocessor_path = '/home/ubuntu/preprocessor_full.pkl'
+    model_path = 'GradientBoosting_best_model_full.pkl'
+    preprocessor_path = 'preprocessor_full.pkl'
     
     model = joblib.load(model_path)
     preprocessor = joblib.load(preprocessor_path)
