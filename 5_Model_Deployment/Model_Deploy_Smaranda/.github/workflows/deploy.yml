@@ -1,0 +1,45 @@
+name: Deploy Streamlit App
+
+on:
+  push:
+    branches:
+      - Smaranda111  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12.4'  
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Configure AWS CLI
+      run: |
+        sudo apt-get -y update
+        sudo apt-get -y install awscli
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure set region eu-north-1
+
+    - name: Prepare SSH key
+      run: |
+        echo "${{ secrets.EC2_PEM_FILE }}" | base64 -d > FSPappKP.pem
+        chmod 600 FSPappKP.pem
+
+    - name: Deploy to EC2
+      run: |
+        scp -o StrictHostKeyChecking=no -i FSPappKP.pem FSPapp.py ubuntu@your-elastic-ip:/home/ubuntu/
+        scp -o StrictHostKeyChecking=no -i FSPappKP.pem GradientBoosting_best_model_full.pkl ubuntu@your-elastic-ip:/home/ubuntu/
+        scp -o StrictHostKeyChecking=no -i FSPappKP.pem preprocessor_full.pkl ubuntu@your-elastic-ip:/home/ubuntu/
+        scp -o StrictHostKeyChecking=no -i FSPappKP.pem selected_features.csv ubuntu@your-elastic-ip:/home/ubuntu/
+        ssh -o StrictHostKeyChecking=no -i FSPappKP.pem ubuntu@your-elastic-ip "cd /home/ubuntu && streamlit run FSPapp.py"
