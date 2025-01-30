@@ -1,5 +1,7 @@
 # Objective
-The goal of this project is to develop and deploy an ML model in which an end user can specify a set of features describing a commercial flight of interest and receive a categorical (yes or no) output indicating if that flight will be delayed more than fifteen minutes or not. Please see my presentation for a high-level overview of my contributions to this project. https://github.com/B-Treftz/Flight_Status_Predictor/blob/main/Flight%20Status%20Predictor%20-%20Treftz%2C%20Brian.pdf
+The goal of this project is to develop and deploy an ML model in which an end user can specify a set of features describing a commercial flight of interest and receive a categorical (yes or no) output indicating if that flight will be delayed more than fifteen minutes or not. 
+
+### Please see my presentation for a high-level overview of my contributions to this project. https://github.com/B-Treftz/Flight_Status_Predictor/blob/main/Flight%20Status%20Predictor%20-%20Treftz%2C%20Brian.pdf
 
 # Core Values
 This project is a collaborative effort of people from different backgrounds in data science coming together to build cool projects. The goal of this effort is to foster **collaboration**, have people **learn** new and interesting concepts, and build a project which is **usable** by a wider audience other than just the team members.
